@@ -1,0 +1,80 @@
+/* other styling */
+
+body {
+    font-family: 'Times New Roman', Times, serif;
+    text-align: center;
+}
+hr {
+    width: 430px;
+}
+#grid{
+    width: 400px;
+    height: 400px;
+
+    background-color: gray;
+    border: 5px solid lightgray;
+
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+.tile {
+    width: 90px;
+    height: 90px;
+    border: 5px solid lightgray;
+
+    font-size: 30px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* tile colours  */
+.num2 {
+    background-color: beige;
+    color: black;
+}
+.num4 {
+    background-color: palegoldenrod;
+    color: black;
+}
+.num8 {
+    background-color: darkorange;
+    color: black;
+}
+.num16 {
+    background-color: orange;
+    color: black;
+}
+.num32 {
+    background-color: orangered;
+    color: black;
+}
+.num64 {
+    background-color: red;
+    color: black;
+}
+.num128 {
+    background-color: salmon;
+    color: black;
+}
+.num256 {
+    background-color: rgb(151, 58, 151);
+    color: black;
+}
+.num512 {
+    background-color: purple;
+    color: lightgray;
+}
+.num1024 {
+    background-color: rgb(91, 1, 91);
+    color: lightgray;
+}
+.num2048 {
+    background-color: black;
+    color: lightgray;
+}
+.num4096 {
+    background-color: black;
+    color: lightgray;
+}
