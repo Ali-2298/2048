@@ -29,6 +29,25 @@ hr {
     justify-content: center;
     align-items: center;
 }
+#startBtn {
+background-color: darkorange;  
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+#startBtn:hover {
+    transform: scale(1.05);
+}
+#startBtn:disabled {
+    background-color: darkgray;
+    cursor: not-allowed;
+    transform: none;
+}
 /* tile colours  */
 .num2 {
     background-color: beige;
@@ -75,6 +94,10 @@ hr {
     color: lightgray;
 }
 .num4096 {
+    background-color: black;
+    color: lightgray;
+}
+.num8192 {
     background-color: black;
     color: lightgray;
 }

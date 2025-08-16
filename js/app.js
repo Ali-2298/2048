@@ -14,10 +14,15 @@ var columns = 4; //4x4 grid
 
 
 /*-------------------------------- Functions --------------------------------*/
-
 window.onload = function() {
-    setGame();
-}
+    document.getElementById("startBtn").addEventListener("click", function() {
+        setGame();
+        this.disabled = true; // This is so the button is disabled when playing the game
+    });
+};
+// window.onload = function() {
+//     setGame();
+// } // starts the game when the window loads, might change this to a start button. 
 
 function setGame() {
     // grid = [ 
@@ -52,7 +57,7 @@ function setGame() {
 
 function updateTile(tile, num) {
     tile.innerText = "";
-    tile.classList.value = ""; //This clears the classlist so that if you merge 2 and 2 together, it bcomes a clean 4 
+    tile.classList.value = ""; //This clears the classlist so that if you merge 2 and 2 together, it bcomes a clean 4 class
     tile.classList.add("tile");
     if (num > 0) {
         tile.innerText = num.toString();
@@ -64,8 +69,7 @@ function updateTile(tile, num) {
     }
 }
 /* more context on the vlassList.value above:
-Basically, it's to avoid one tile having two numbers. So that when we merge 2 and 2, it would be only 4.
-As opposed to it being 2 2 4 or 2 and 4 etc. 
+Basically, it's to avoid one tile having two classes. So when we merge, one tile wouldn't have the classes of both the numbers 2 and 4 (2 being the old tiles and 4 the new)
 This also required some reaserach, also thanks to Khalil for letting me know about classList!
 */
 function filterZero(row){
