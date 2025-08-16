@@ -7,7 +7,7 @@
 var grid;
 var score = 0;
 var rows = 4;
-var columns = 4;
+var columns = 4; //4x4 grid
 
 /*------------------------ Cached Element References ------------------------*/
 
@@ -78,7 +78,7 @@ function slide(row) {
         if (row[i] == row[i+1]) {
             row[i] *= 2;
             row[i+1] = 0;
-            score += row[i];
+            score += row[i]; // score updater! It adds up the added up tiles to the score
         }
     } 
     row = filterZero(row); 
@@ -87,7 +87,7 @@ function slide(row) {
     } 
     return row;
 }
-
+// movement functions
 function slideLeft() {
     for (let r = 0; r < rows; r++) {
         let row = grid[r];
@@ -116,7 +116,7 @@ function slideRight() {
 }
 // Sliding up was less straight forward than right or left. I basically turn the vertical into horizontal (but not raelly)
 function slideUp() {
-    for (let c = 0; c < columns; c++) {
+    for (let c = 0; c < columns; c++){ // Had to change the r to c from the right/left codes
         let row = [grid[0][c], grid[1][c], grid[2][c], grid[3][c]]; // grid 0 1 2 3 is basically from down to up. So the top one is 0, second one is 1, etc.
         row = slide(row);
         for (let r = 0; r < rows; r++){
@@ -129,7 +129,7 @@ function slideUp() {
 }
 
 function slideDown() {
-    for (let c = 0; c < columns; c++) {
+    for (let c = 0; c < columns; c++) { // similar to slideUp
         let row = [grid[0][c], grid[1][c], grid[2][c], grid[3][c]]; // This didn't work at first! I copied and pasted the Up function thinking it would work like left / right but it didn't.
         row.reverse(); // Then I learned about this and it worked (after some research) 
         row = slide(row);
@@ -143,7 +143,7 @@ function slideDown() {
     }
 }
 
-function setTwo() {
+function setTwo() { 
     if (!hasEmptyTile()) {
         return;
     }
@@ -173,7 +173,6 @@ function hasEmptyTile() {
     }
     return false;
 }
-
 /*----------------------------- Event Listeners -----------------------------*/
 // same setTwo idea at the start of the game but this is done after every move. It finds an empty tile and then places one there
 document.addEventListener('keyup', (e) => {
