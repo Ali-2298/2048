@@ -178,11 +178,10 @@ function hasEmptyTile() {
     return false;
 }
 /*----------------------------- Event Listeners -----------------------------*/
-// same setTwo idea at the start of the game but this is done after every move. It finds an empty tile and then places one there
 document.addEventListener('keyup', (e) => {
     if (e.code == "ArrowLeft") {
         slideLeft();
-        setTwo();
+        setTwo(); // same setTwo idea at the start of the game but this is done after every move. It finds an empty tile and then places one there
     }
     else if (e.code == "ArrowRight") {
         slideRight();

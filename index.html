@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script defer src="js/app.js"></script>
     <link rel="stylesheet" href="css/style.css" />
+    
     <title> 2048 </title>
 </head>
 <body>
@@ -13,6 +14,7 @@
     <h2>Score: <span id="score">0</span></h2>
     <button id="startBtn">Start Game</button>
     <div id="grid">
+        <!-- These divs below were just to test out the colors and the sizes of the tiles in the grid -->
         <!-- <div class="tile num2">2</div>
         <div class="tile num4">4</div>
         <div class="tile num8">8</div>
@@ -26,6 +28,14 @@
         <div class="tile num2048">2048</div>
         <div class="tile num4096">4096</div> 
         <div class="tile num8192">8192</div> -->
+        <div id="gameOverBox" class="hidden">
+  <div class="gameOverContent">
+    <h2>Game Over!</h2>
+    <H3>No possible movements left. Play again?</H3>
+    <button id="restartBtn">Restart</button>
+  </div>
+</div>
+
     </div>
 </body>
 </html>
