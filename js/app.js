@@ -1,7 +1,4 @@
 /*-------------------------------- Constants --------------------------------*/
-
-
-
 /*---------------------------- Variables (state) ----------------------------*/
 
 var grid;
@@ -22,7 +19,7 @@ window.onload = function() {
 };
 // window.onload = function() {
 //     setGame();
-// } // starts the game when the window loads, might change this to a start button. 
+// } // starts the game when the window loads, might change this to a start button. I commented it out in case my button failed.
 
 function setGame() {
     // grid = [ 
@@ -32,14 +29,14 @@ function setGame() {
     //     [0, 0, 0, 0]
     // ];
     // I added this grid to test out the merges intially, commented it out eventually
-
+    console.log("running game!")
     grid = [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0]
     ]
-// r = rows c = columns (for me)
+// r = rows c = columns 
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < columns; c++ /* not the language!*/) {
             let tile = document.createElement("div");
@@ -68,14 +65,36 @@ function updateTile(tile, num) {
         }                
     }
 }
-/* more context on the vlassList.value above:
+/* more context on the classList.value above:
 Basically, it's to avoid one tile having two classes. So when we merge, one tile wouldn't have the classes of both the numbers 2 and 4 (2 being the old tiles and 4 the new)
 This also required some reaserach, also thanks to Khalil for letting me know about classList!
 */
 function filterZero(row){
     return row.filter(num => num != 0); //creates a new array of numbers not = to 0
 }
+function gameOver() {
+    document.getElementById("gameOverBox").classList.remove("hidden");
+}
 
+function canMove() {
+    if (hasEmptyTile()) return true;
+
+    // This will check if there are any possible horizontal movements
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns - 1; c++) {
+            if (grid[r][c] === grid[r][c+1]) return true;
+        }
+    }
+
+    // This will check if there are any vertical movements
+    for (let c = 0; c < columns; c++) {
+        for (let r = 0; r < rows - 1; r++) {
+            if (grid[r][c] === grid[r+1][c]) return true;
+        }
+    }
+
+    return false;
+}
 function slide(row) {
     row = filterZero(row);
     for (let i = 0; i < row.length-1; i++){
@@ -91,60 +110,98 @@ function slide(row) {
     } 
     return row;
 }
+function arraysEqual(a, b) {
+    return a.length === b.length && a.every((val, i) => val === b[i]);
+} //without this, it would add a new tile after each keypress, rather than the actual tiles moving.
+
 // movement functions
 function slideLeft() {
+    let moved = false;
     for (let r = 0; r < rows; r++) {
         let row = grid[r];
+        let originalRow = [...row];
         row = slide(row);
         grid[r] = row;
-        for (let c = 0; c < columns; c++){
+
+        for (let c = 0; c < columns; c++) {
             let tile = document.getElementById(r.toString() + "-" + c.toString());
             let num = grid[r][c];
             updateTile(tile, num);
         }
+
+        if (!arraysEqual(originalRow, row)) {
+            moved = true;
+        }
     }
+    return moved;
 }
 
 function slideRight() {
+    let moved = false;
     for (let r = 0; r < rows; r++) {
-        let row = grid[r];         
-        row.reverse();              
-        row = slide(row)            
-        grid[r] = row.reverse();   
-        for (let c = 0; c < columns; c++){
+        let row = grid[r];
+        let originalRow = [...row];
+        row.reverse();
+        row = slide(row);
+        row.reverse();
+        grid[r] = row;
+
+        for (let c = 0; c < columns; c++) {
             let tile = document.getElementById(r.toString() + "-" + c.toString());
             let num = grid[r][c];
             updateTile(tile, num);
         }
+
+        if (!arraysEqual(originalRow, row)) {
+            moved = true;
+        }
     }
+    return moved;
 }
 // Sliding up was less straight forward than right or left. I basically turn the vertical into horizontal (but not raelly)
 function slideUp() {
-    for (let c = 0; c < columns; c++){ // Had to change the r to c from the right/left codes
-        let row = [grid[0][c], grid[1][c], grid[2][c], grid[3][c]]; // grid 0 1 2 3 is basically from down to up. So the top one is 0, second one is 1, etc.
-        row = slide(row);
-        for (let r = 0; r < rows; r++){
-            grid[r][c] = row[r];
+    let moved = false;
+    for (let c = 0; c < columns; c++) {
+        let col = [grid[0][c], grid[1][c], grid[2][c], grid[3][c]];
+        let originalCol = [...col];
+        col = slide(col);
+
+        for (let r = 0; r < rows; r++) {
+            grid[r][c] = col[r];
             let tile = document.getElementById(r.toString() + "-" + c.toString());
             let num = grid[r][c];
             updateTile(tile, num);
         }
+
+        if (!arraysEqual(originalCol, col)) {
+            moved = true;
+        }
     }
+    return moved;
 }
 
 function slideDown() {
+    let moved = false;
     for (let c = 0; c < columns; c++) { // similar to slideUp
-        let row = [grid[0][c], grid[1][c], grid[2][c], grid[3][c]]; // This didn't work at first! I copied and pasted the Up function thinking it would work like left / right but it didn't.
-        row.reverse(); // Then I learned about this and it worked (after some research) 
-        row = slide(row);
-        row.reverse();
-        for (let r = 0; r < rows; r++){
-            grid[r][c] = row[r];
+        let col = [grid[0][c], grid[1][c], grid[2][c], grid[3][c]]; // This didn't work at first! I copied and pasted the Up function thinking it would work like left / right but it didn't.
+
+        let originalCol = [...col];
+        col.reverse();// Then I learned about this and it worked (after some research) 
+        col = slide(col);
+        col.reverse();
+
+        for (let r = 0; r < rows; r++) {
+            grid[r][c] = col[r];
             let tile = document.getElementById(r.toString() + "-" + c.toString());
             let num = grid[r][c];
             updateTile(tile, num);
         }
+
+        if (!arraysEqual(originalCol, col)) {
+            moved = true;
+        }
     }
+    return moved;
 }
 
 function setTwo() { 
@@ -179,22 +236,33 @@ function hasEmptyTile() {
 }
 /*----------------------------- Event Listeners -----------------------------*/
 document.addEventListener('keyup', (e) => {
-    if (e.code == "ArrowLeft") {
-        slideLeft();
-        setTwo(); // same setTwo idea at the start of the game but this is done after every move. It finds an empty tile and then places one there
-    }
-    else if (e.code == "ArrowRight") {
-        slideRight();
-        setTwo();
-    }
-    else if (e.code == "ArrowUp") {
-        slideUp();
-        setTwo();
+    let moved = false;
 
+    if (e.code === "ArrowLeft") {
+        moved = slideLeft();
     }
-    else if (e.code == "ArrowDown") {
-        slideDown();
+    else if (e.code === "ArrowRight") {
+        moved = slideRight();
+    }
+    else if (e.code === "ArrowUp") {
+        moved = slideUp();
+    }
+    else if (e.code === "ArrowDown") {
+        moved = slideDown();
+    }
+
+    if (moved) {
         setTwo();
+        document.getElementById("score").innerText = score;
     }
-    document.getElementById("score").innerText = score;
+
+    if (!canMove()) {
+        gameOver();
+    }
 })
+document.getElementById("restartBtn").addEventListener("click", () => {
+    document.getElementById("grid").innerHTML = "";
+    score = 0;
+    document.getElementById("score").innerText = score;
+    setGame();
+}); // Credit to Khalil for helping me with the restart button!
