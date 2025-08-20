@@ -5,7 +5,7 @@ var grid;
 var score = 0;
 var rows = 4;
 var columns = 4; //4x4 grid
-
+var hasWon = false; // this will prevent from the winning popup from always showing over and over again with every move
 /*------------------------ Cached Element References ------------------------*/
 
 
@@ -29,7 +29,7 @@ function setGame() {
     //     [0, 0, 0, 0]
     // ];
     // I added this grid to test out the merges intially, commented it out eventually
-    console.log("running game!")
+    // console.log("running game!") tester
     grid = [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -65,13 +65,30 @@ function updateTile(tile, num) {
         }                
     }
 }
-/* more context on the classList.value above:
+/* more context (not that you don't know) on the classList.value above:
 Basically, it's to avoid one tile having two classes. So when we merge, one tile wouldn't have the classes of both the numbers 2 and 4 (2 being the old tiles and 4 the new)
 This also required some reaserach, also thanks to Khalil for letting me know about classList!
 */
 function filterZero(row){
     return row.filter(num => num != 0); //creates a new array of numbers not = to 0
+} // win condition
+function checkWin() {
+    if (hasWon) return false; // Again so that the winning popup box doesn't show repeatedly
+
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
+            if (grid[r][c] === 2048) {
+                hasWon = true; // just to mark it as a win
+                document.getElementById("winBox").classList.remove("hidden");
+                return true;
+            }
+        }
+    }
+    return false;
 }
+
+
+// Loss Condition / check 
 function gameOver() {
     document.getElementById("gameOverBox").classList.remove("hidden");
 }
@@ -86,7 +103,7 @@ function canMove() {
         }
     }
 
-    // This will check if there are any vertical movements
+    // This will check if there are any vertical movements possible
     for (let c = 0; c < columns; c++) {
         for (let r = 0; r < rows - 1; r++) {
             if (grid[r][c] === grid[r+1][c]) return true;
@@ -130,7 +147,7 @@ function slideLeft() {
         }
 
         if (!arraysEqual(originalRow, row)) {
-            moved = true;
+            moved = true; // This is the one I mentioned on line 132. Without it, tiles would come without actual movement.
         }
     }
     return moved;
@@ -237,7 +254,6 @@ function hasEmptyTile() {
 /*----------------------------- Event Listeners -----------------------------*/
 document.addEventListener('keyup', (e) => {
     let moved = false;
-
     if (e.code === "ArrowLeft") {
         moved = slideLeft();
     }
@@ -250,19 +266,31 @@ document.addEventListener('keyup', (e) => {
     else if (e.code === "ArrowDown") {
         moved = slideDown();
     }
-
     if (moved) {
         setTwo();
         document.getElementById("score").innerText = score;
+        checkWin(); // 
     }
-
     if (!canMove()) {
         gameOver();
     }
-})
+
+});
 document.getElementById("restartBtn").addEventListener("click", () => {
     document.getElementById("grid").innerHTML = "";
     score = 0;
+    hasWon = false;
     document.getElementById("score").innerText = score;
+    // document.getElementById("gameOverBox").classList.add("hidden"); 
+    document.getElementById("winBox").classList.add("hidden");
     setGame();
 }); // Credit to Khalil for helping me with the restart button!
+
+document.getElementById("continueBtn").addEventListener("click", () => {
+    document.getElementById("winBox").classList.add("hidden");
+});
+
+document.getElementById("endBtn").addEventListener("click", () => {
+    document.getElementById("winBox").classList.add("hidden");
+    gameOver(); 
+});
