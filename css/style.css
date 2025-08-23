@@ -147,6 +147,20 @@ background-color: darkorange;
     transform: scale(1.05);
 }
 
+/* animations */
+
+@keyframes pop {
+  0%   { transform: scale(0.6); opacity: 0.6; }
+  80%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.pop { animation: pop 180ms ease-out; }
+
+.tile { will-change: transform, opacity; }
+
+
+
+
 
 /* tile colours  */
 .num2 {

@@ -48,7 +48,7 @@ function setGame() {
     }
     //creates 2 (two tiles) at the start of the game
     setTwo();
-    setTwo();
+    // setTwo();
 
 }
 
@@ -276,21 +276,149 @@ document.addEventListener('keyup', (e) => {
     }
 
 });
+
+// restart the game button. (this was a struggle)
 document.getElementById("restartBtn").addEventListener("click", () => {
-    document.getElementById("grid").innerHTML = "";
     score = 0;
     hasWon = false;
+    grid = [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+    ];
     document.getElementById("score").innerText = score;
-    // document.getElementById("gameOverBox").classList.add("hidden"); 
-    document.getElementById("winBox").classList.add("hidden");
-    setGame();
-}); // Credit to Khalil for helping me with the restart button!
 
-document.getElementById("continueBtn").addEventListener("click", () => {
+    document.getElementById("gameOverBox").classList.add("hidden");
     document.getElementById("winBox").classList.add("hidden");
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
+            let tile = document.getElementById(r + "-" + c);
+            updateTile(tile, 0);
+        }
+    }
+    // shoutout to Khalil for helping with this, it wasn't working at all
+
+    // start fresh game with two tiles
+    setTwo();
+    setTwo();
 });
-
+// ending the game button
 document.getElementById("endBtn").addEventListener("click", () => {
     document.getElementById("winBox").classList.add("hidden");
     gameOver(); 
 });
+// continuing the game box
+document.getElementById("continueBtn").addEventListener("click", () => {
+    document.getElementById("winBox").classList.add("hidden");
+});
+
+
+/*----------------------------- Animation -----------------------------*/ 
+// I added this section to not be confused and track it easily
+
+(function () {
+  function readVal(r, c) {
+    const el = document.getElementById(r + "-" + c);
+    const n = parseInt(el && el.innerText ? el.innerText.trim() : "", 10);
+    return Number.isFinite(n) ? n : 0;
+  }
+  function snapshot() {
+    const snap = [];
+    for (let r = 0; r < rows; r++) {
+      snap[r] = [];
+      for (let c = 0; c < columns; c++) snap[r][c] = readVal(r, c);
+    }
+    return snap;
+  }
+
+  function animatePop(el) {
+    if (!el) return;
+    el.classList.remove("pop");
+    void el.offsetWidth;
+    el.classList.add("pop");
+  }
+
+ 
+  let prevSnap = snapshot();
+
+  // when merging, the merged tile will popup
+  function popMergesIfMoved(moved) {
+    if (!moved) return; // I faced an issue where the tiles would popup even if they didn't actually move, this fixed it. Similar idea used before as well
+    requestAnimationFrame(() => {
+      const cur = snapshot();
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
+          const before = prevSnap[r][c];
+          const after  = cur[r][c];
+          const isIncrease = after > before;
+          const isSpawn = before === 0 && (after === 2 || after === 4);
+          if (isIncrease && !isSpawn) {
+            animatePop(document.getElementById(r + "-" + c));
+          }
+        }
+      }
+      prevSnap = cur;
+    });
+  }
+
+  if (typeof window.slideLeft === "function") {
+    const _slideLeft = window.slideLeft;
+    window.slideLeft = function () {
+      const moved = _slideLeft();
+      popMergesIfMoved(moved);
+      return moved;
+    };
+  }
+  if (typeof window.slideRight === "function") {
+    const _slideRight = window.slideRight;
+    window.slideRight = function () {
+      const moved = _slideRight();
+      popMergesIfMoved(moved);
+      return moved;
+    };
+  }
+  if (typeof window.slideUp === "function") {
+    const _slideUp = window.slideUp;
+    window.slideUp = function () {
+      const moved = _slideUp();
+      popMergesIfMoved(moved);
+      return moved;
+    };
+  }
+  if (typeof window.slideDown === "function") {
+    const _slideDown = window.slideDown;
+    window.slideDown = function () {
+      const moved = _slideDown();
+      popMergesIfMoved(moved);
+      return moved;
+    };
+  }
+
+
+  if (typeof window.setTwo === "function") {
+    const _setTwo = window.setTwo;
+    window.setTwo = function () {
+      const before = snapshot();       
+      _setTwo();                       
+    
+      outer: for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
+          const was = before[r][c];
+          const now = readVal(r, c);
+          if (was === 0 && (now === 2 || now === 4)) {
+            animatePop(document.getElementById(r + "-" + c));
+            break outer;
+          }
+        }
+      }
+      prevSnap = snapshot();
+    };
+  }
+
+  const startBtn = document.getElementById("startBtn");
+  if (startBtn) startBtn.addEventListener("click", () => { requestAnimationFrame(() => { prevSnap = snapshot(); }); });
+
+  const restartBtn = document.getElementById("restartBtn");
+  if (restartBtn) restartBtn.addEventListener("click", () => { requestAnimationFrame(() => { prevSnap = snapshot(); }); });
+})();
