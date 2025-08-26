@@ -23,13 +23,6 @@ Technologies Used:
 - JavaScript
 
 Next Steps:
-<<<<<<< HEAD
 - Add a high score feature
 - Slide animations for tile movements
 - Touch controls for mobile
-=======
-
--Add high score
--Add more animations including tile movement 
--Improve the styling
->>>>>>> 98b335768e02582d0a81299b480da071f622ff71
