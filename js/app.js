@@ -1,11 +1,11 @@
 /*-------------------------------- Constants --------------------------------*/
 /*---------------------------- Variables (state) ----------------------------*/
 
-var grid;
-var score = 0;
-var rows = 4;
-var columns = 4; //4x4 grid
-var hasWon = false; // this will prevent from the winning popup from always showing over and over again with every move
+let grid;
+let score = 0;
+const rows = 4;
+const columns = 4; // 4x4 grid
+let hasWon = false; // this will prevent from the winning popup from always showing over and over again with every move
 /*------------------------ Cached Element References ------------------------*/
 
 
@@ -17,19 +17,7 @@ window.onload = function() {
         this.disabled = true; // This is so the button is disabled when playing the game
     });
 };
-// window.onload = function() {
-//     setGame();
-// } // starts the game when the window loads, might change this to a start button. I commented it out in case my button failed.
-
 function setGame() {
-    // grid = [ 
-    //     [2, 2, 2, 2],
-    //     [2, 2, 2, 2],
-    //     [0, 0, 0, 0],
-    //     [0, 0, 0, 0]
-    // ];
-    // I added this grid to test out the merges intially, commented it out eventually
-    // console.log("running game!") tester
     grid = [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -48,7 +36,7 @@ function setGame() {
     }
     //creates 2 (two tiles) at the start of the game
     setTwo();
-    // setTwo();
+    setTwo();
 
 }
 

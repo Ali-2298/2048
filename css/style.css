@@ -7,6 +7,24 @@ body {
 hr {
     width: 430px;
 }
+.hud {
+  display: grid;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+.instructions {
+  max-width: 460px;
+  margin: 0 auto 12px;
+  text-align: left;
+}
+.instructions h3 {
+  margin: 6px 0;
+}
+.instructions ul {
+  margin: 0 0 6px 18px;
+}
+
 #grid{
     width: 400px;
     height: 400px;
@@ -63,6 +81,13 @@ background-color: darkorange;
     cursor: not-allowed;
     transform: none;
 }
+#startBtn:focus,
+#restartBtn:focus,
+#continueBtn:focus,
+#endBtn:focus {
+  outline: 2px solid black;
+}
+
 /* game over */
 #gameOverBox {
     position: fixed;
